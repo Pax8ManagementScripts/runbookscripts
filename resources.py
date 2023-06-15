@@ -13,13 +13,13 @@ STORAGE_ACCOUNT_NAME = 'vustorage102'
 RESOURCE_GROUP_NAME = 'vu-storage-rg'
 
 
-VAULT_URI = 'https://kv-pax8-tst.vault.azure.net/' #get_automation_variable('VAULT_URI')
+# VAULT_URI = 'https://kv-pax8-tst.vault.azure.net/' #get_automation_variable('VAULT_URI')
 AZURE_CLIENT_ID_SECRET_NAMES = ['sre-as-a-service-sbx-id', 'sre-as-a-service-tst-id', 'sre-as-a-service-prd-id'] #get_automation_variable('AZURE_CLIENT_ID_SECRET_NAMES').split(',')
 AZURE_CLIENT_SECRET_SECRET_NAMES = ['sre-as-a-service-sbx-secret', 'sre-as-a-service-tst-secret', 'sre-as-a-service-prd-secret'] #get_automation_variable('AZURE_CLIENT_SECRET_SECRET_NAMES').split(',')
 STORAGE_CONTAINER_NAME = 'vustorage'
 
 credential = DefaultAzureCredential()
-secret_client = SecretClient(vault_url=VAULT_URI, credential=credential)
+# secret_client = SecretClient(vault_url=VAULT_URI, credential=credential)
 
 subscription_ids = []
 azure_client_ids = []
@@ -29,13 +29,13 @@ for i in range(len(AZURE_CLIENT_ID_SECRET_NAMES)):
     azure_client_id_secret_name = AZURE_CLIENT_ID_SECRET_NAMES[i]
     azure_client_secret_secret_name = AZURE_CLIENT_SECRET_SECRET_NAMES[i]
 
-    azure_client_id = secret_client.get_secret(azure_client_id_secret_name).value
-    azure_client_secret = secret_client.get_secret(azure_client_secret_secret_name).value
+    azure_client_id = os.environ.get(azure_client_id_secret_name)
+    azure_client_secret = os.environ.get(azure_client_secret_secret_name)
 
     credentials = ServicePrincipalCredentials(
-        client_id=azure_client_id,
-        secret=azure_client_secret,
-        tenant='76e4ac64-f84d-401d-8594-3f6ca5374437'
+        client_id = azure_client_id,
+        secret = azure_client_secret,
+        tenant = os.environ.get("TENANT_ID")
     )
 
     subscription_client = SubscriptionClient(credentials)
@@ -49,9 +49,9 @@ for i in range(len(subscription_ids)):
     azure_client_secret = azure_client_secrets[i]
 
     credentials = ServicePrincipalCredentials(
-        client_id=azure_client_id,
-        secret=azure_client_secret,
-        tenant='76e4ac64-f84d-401d-8594-3f6ca5374437'
+        client_id = azure_client_id,
+        secret = azure_client_secret,
+        tenant = os.environ.get("TENANT_ID")
     )
 
     subscription_client = SubscriptionClient(credentials)
