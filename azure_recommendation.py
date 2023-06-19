@@ -1,4 +1,5 @@
 import json
+import csv
 import os
 from azure.identity import ClientSecretCredential
 from azure.mgmt.advisor import AdvisorManagementClient
@@ -12,6 +13,18 @@ subscription_id = os.environ.get("SUBSCRIPTION_ID")
 client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
 tenant_id = os.environ.get("TENANT_ID")
+
+def saveDataToCsv(data, csvfile):
+    data_file = open(csvfile, 'w')
+    csv_writer = csv.writer(data_file)
+    count = 0
+    for i in data:
+        if count == 0:
+            header = i.keys()
+            csv_writer.writerow(header)
+            count += 1
+        csv_writer.writerow(i.values())
+    data_file.close()
 
 credentials = ClientSecretCredential(
     client_id = client_id,
@@ -28,13 +41,9 @@ for recommendation in recommendations:
     recommendation_dict = recommendation.as_dict()
     recommendations_list.append(recommendation_dict)
 
-output_file = 'azure_recommendations.json'
-with open(output_file, 'w') as f:
-    json.dump(recommendations_list, f)
-
+output_file = "azure_recommendations.csv"
+saveDataToCsv(recommendations_list, output_file)
 blob_service_client = BlobServiceClient.from_connection_string(f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net")
 blob_client = blob_service_client.get_blob_client(container=container_name, blob=output_file)
 with open(output_file, "rb") as data:
     blob_client.upload_blob(data, overwrite=True)
-
-os.remove(output_file)

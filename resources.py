@@ -34,7 +34,7 @@ print(f"Subscription ID: {subscription_id}, Subscription Name: {subscription_nam
 resource_client = ResourceManagementClient(credentials, subscription_id)
 resource_list = resource_client.resources.list()
 
-file_name = f"resources_{subscription_id}.csv"
+file_name = f"resources.csv"
 with open(file_name, 'w', newline='') as resources_file:
     writer = csv.writer(resources_file)
     writer.writerow(['Subscription ID', 'Subscription Name', 'Resource Name', 'Resource Type'])

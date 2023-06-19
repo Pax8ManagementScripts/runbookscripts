@@ -34,7 +34,7 @@ for resource in untagged_resources:
     print("Resource Name: {}".format(resource.name))
     print()
 
-file_name = f"{subscription_id}_untagged_resources.csv"
+file_name = f"untagged_resources.csv"
 with open(file_name, 'w', newline='') as resources_file:
     writer = csv.writer(resources_file)
     writer.writerow(['Untagged Resource ID', 'Resource Name', 'Resource Type'])
