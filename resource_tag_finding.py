@@ -1,5 +1,5 @@
 import os
-from azure.common.credentials import ServicePrincipalCredentials
+from azure.identity import ClientSecretCredential
 from azure.mgmt.resource import ResourceManagementClient
 
 subscription_id = os.environ.get("SUBSCRIPTION_ID")
@@ -7,12 +7,11 @@ client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
 tenant_id = os.environ.get("TENANT_ID")
 
-credentials = ServicePrincipalCredentials(
-    client_id=client_id,
-    secret=client_secret,
-    tenant=tenant_id
+credentials = ClientSecretCredential(
+    client_id = client_id,
+    client_secret = client_secret,
+    tenant = tenant_id
 )
-
 resource_client = ResourceManagementClient(credentials, subscription_id)
 
 resources = resource_client.resources.list()
