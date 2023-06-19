@@ -10,7 +10,7 @@ tenant_id = os.environ.get("TENANT_ID")
 credentials = ClientSecretCredential(
     client_id = client_id,
     client_secret = client_secret,
-    tenant = tenant_id
+    tenant_id = tenant_id
 )
 resource_client = ResourceManagementClient(credentials, subscription_id)
 
