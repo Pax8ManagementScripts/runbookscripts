@@ -24,25 +24,26 @@ jobs:
       - name: checkout repo content
         uses: actions/checkout@v2
 
-      # - name: setup python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.10'
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-      # - name: install python packages
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install -r requirements.txt
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      # - name: Execute resources.py script
-      #   run: python resources.py
+      - name: Execute resources.py script
+        run: python resources.py
 
-      # - name: Execute azure_recommendation.py script
-      #   run: python azure_recommendation.py
+      - name: Execute azure_recommendation.py script
+        run: python azure_recommendation.py
 
-      # - name: Execute resource_tag_finding.py script
-      #   run: python resource_tag_finding.py
-      - name: setup powershell modules
+      - name: Execute resource_tag_finding.py script
+        run: python resource_tag_finding.py
+        
+      - name: Import AZ powershell module
         shell: pwsh
         run: Install-Module -Name Az -Repository PSGallery -Force
 
@@ -50,7 +51,7 @@ jobs:
         shell: pwsh
         run: .\vmuptimescript.ps1 -tenantId ${{ vars.TENANT_ID }} -clientId ${{ vars.CLIENT_ID }} -clientSecret ${{ secrets.CLIENT_SECRET }} -storageAccountName ${{ vars.STORAGE_ACCOUNT_NAME }} -storageAccountKey ${{ secrets.STORAGE_ACCOUNT_KEY }} -containerName ${{ vars.STORAGE_CONTAINER_NAME }}
 
-      # - name: Execute vmpatchstatus.ps1 script
-      #   shell: pwsh
-      #   run: .\vmpatchstatus.ps1 -tenantId $TENANT_ID -clientId ${{ vars.CLIENT_ID }} -clientSecret $CLIENT_SECRET -storageAccountName $STORAGE_ACCOUNT_NAME -storageAccountKey $STORAGE_ACCOUNT_KEY -containerName $STORAGE_CONTAINER_NAME -resourceGroup rg-test
+      - name: Execute vmpatchstatus.ps1 script
+        shell: pwsh
+        run: .\vmpatchstatus.ps1 -tenantId ${{ vars.TENANT_ID }} -clientId ${{ vars.CLIENT_ID }} -clientSecret ${{ secrets.CLIENT_SECRET }} -storageAccountName ${{ vars.STORAGE_ACCOUNT_NAME }} -storageAccountKey ${{ secrets.STORAGE_ACCOUNT_KEY }} -containerName ${{ vars.STORAGE_CONTAINER_NAME }} -resourceGroup ${{ vars.RESOURCE_GROUP_NAME }}
       
