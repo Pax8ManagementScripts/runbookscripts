@@ -34,8 +34,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Execute scripts
-        run: |
-          python resources.py
-          python azure_recommendation.py
-          python resource_tag_finding.py
+      - name: Execute resources.py script
+        run: python resources.py
+
+      - name: Execute azure_recommendation.py script
+        run: python azure_recommendation.py
+
+      - name: Execute resource_tag_finding.py script
+        run: python resource_tag_finding.py
+      
+      - name: Execute vmuptimescript.ps1 script
+        shell: pwsh
+        run: .\vmuptimescript.ps1 -tenantId ${{ vars.TENANT_ID }} -clientId ${{ vars.CLIENT_ID }} -clientSecret ${{ secrets.CLIENT_SECRET }} -storageAccountName ${{ vars.STORAGE_ACCOUNT_NAME }} -storageAccountKey ${{ secrets.STORAGE_ACCOUNT_KEY }} -containerName ${{ vars.STORAGE_CONTAINER_NAME }}
+
+      # - name: Execute vmpatchstatus.ps1 script
+      #   shell: pwsh
+      #   run: .\vmpatchstatus.ps1 -tenantId $TENANT_ID -clientId ${{ vars.CLIENT_ID }} -clientSecret $CLIENT_SECRET -storageAccountName $STORAGE_ACCOUNT_NAME -storageAccountKey $STORAGE_ACCOUNT_KEY -containerName $STORAGE_CONTAINER_NAME -resourceGroup rg-test
+      
