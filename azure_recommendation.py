@@ -4,10 +4,17 @@ from azure.storage.blob import BlobServiceClient
 import json
 import os
 
-subscription_id = '329132a7-0936-447c-ba81-63a86780f4da'
-client_id = '7bf8b308-7216-47bc-9d52-673fc40df5c7'
-client_secret = 'cAG8Q~hrvfcorn5wlOijJqBvCJZv3d3A~uYcxazl'
-tenant_id = '76e4ac64-f84d-401d-8594-3f6ca5374437'
+
+storage_account_name = os.environ.get("STORAGE_ACCOUNT_NAME")
+storage_account_key = os.environ.get("STORAGE_ACCOUNT_KEY")
+container_name = os.environ.get("STORAGE_CONTAINER_NAME")
+
+# credentials = DefaultAzureCredential()
+
+subscription_id = os.environ.get("SUBSCRIPTION_ID")
+client_id = os.environ.get("CLIENT_ID")
+client_secret = os.environ.get("CLIENT_SECRET")
+tenant_id = os.environ.get("TENANT_ID")
 
 credentials = ServicePrincipalCredentials(
     client_id=client_id,
@@ -27,10 +34,6 @@ for recommendation in recommendations:
 output_file = 'azure_recommendations.json'
 with open(output_file, 'w') as f:
     json.dump(recommendations_list, f)
-
-storage_account_name = 'cs1100320029fc62a68'
-storage_account_key = 'A3LOyw58sysUuBKpDbUf5EyHDfZpOFSPpqb9G2KyQhauW/N1fKyF6gt2VCanhe/1ujM/v2l4x3mJ+ASt3i7mRQ=='
-container_name = 'resourcesinfo'
 
 blob_service_client = BlobServiceClient.from_connection_string(f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net")
 blob_client = blob_service_client.get_blob_client(container=container_name, blob=output_file)
