@@ -43,7 +43,11 @@ for recommendation in recommendations:
 
 output_file = "azure_recommendations.csv"
 saveDataToCsv(recommendations_list, output_file)
-blob_service_client = BlobServiceClient.from_connection_string(f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net")
+
+# Upload the file to blob storage
+CONN_STR = f"DefaultEndpointsProtocol=https;AccountName={storage_account_name};AccountKey={storage_account_key};EndpointSuffix=core.windows.net"
+blob_service_client = BlobServiceClient.from_connection_string(CONN_STR)
 blob_client = blob_service_client.get_blob_client(container=container_name, blob=output_file)
 with open(output_file, "rb") as data:
     blob_client.upload_blob(data, overwrite=True)
+print(f"Resources written to {output_file}")
