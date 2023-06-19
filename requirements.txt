@@ -9,4 +9,4 @@ azure-mgmt-storage==21.0.0
 msrestazure==0.6.4
 azure-keyvault==4.2.0
 azure-mgmt-automation==1.0.0
-#
+azure-mgmt-advisor==9.0.0
