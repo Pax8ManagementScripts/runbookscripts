@@ -49,7 +49,7 @@ print(f"Resources written to {file_name}")
 CONN_STR = f"DefaultEndpointsProtocol=https;AccountName={STORAGE_ACCOUNT_NAME};AccountKey={STORAGE_ACCOUNT_KEY};EndpointSuffix=core.windows.net"
 blob_service_client = BlobServiceClient.from_connection_string(CONN_STR)
 container_client = blob_service_client.get_container_client(STORAGE_CONTAINER_NAME)
-blob_client = container_client.get_blob_client(f"resources_{subscription_id}.csv")
+blob_client = container_client.get_blob_client(file_name)
 with open(file_name, "rb") as data:
     blob_client.upload_blob(data, overwrite=True)
 
