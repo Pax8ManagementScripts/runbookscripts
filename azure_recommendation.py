@@ -1,25 +1,22 @@
-from azure.common.credentials import ServicePrincipalCredentials
-from azure.mgmt.advisor import AdvisorManagementClient
-from azure.storage.blob import BlobServiceClient
 import json
 import os
-
+from azure.identity import ClientSecretCredential
+from azure.mgmt.advisor import AdvisorManagementClient
+from azure.storage.blob import BlobServiceClient
 
 storage_account_name = os.environ.get("STORAGE_ACCOUNT_NAME")
 storage_account_key = os.environ.get("STORAGE_ACCOUNT_KEY")
 container_name = os.environ.get("STORAGE_CONTAINER_NAME")
-
-# credentials = DefaultAzureCredential()
 
 subscription_id = os.environ.get("SUBSCRIPTION_ID")
 client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
 tenant_id = os.environ.get("TENANT_ID")
 
-credentials = ServicePrincipalCredentials(
-    client_id=client_id,
-    secret=client_secret,
-    tenant=tenant_id
+credentials = ClientSecretCredential(
+    client_id = client_id,
+    client_secret = client_secret,
+    tenant = tenant_id
 )
 
 advisor_client = AdvisorManagementClient(credentials, subscription_id)
