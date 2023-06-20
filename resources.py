@@ -14,9 +14,6 @@ STORAGE_ACCOUNT_NAME = os.environ.get("STORAGE_ACCOUNT_NAME")
 STORAGE_ACCOUNT_KEY = os.environ.get("STORAGE_ACCOUNT_KEY")
 STORAGE_CONTAINER_NAME = os.environ.get("STORAGE_CONTAINER_NAME")
 
-# credentials = DefaultAzureCredential()
-
-subscription_id = os.environ.get("SUBSCRIPTION_ID")
 azure_client_id = os.environ.get("CLIENT_ID")
 azure_client_secret = os.environ.get("CLIENT_SECRET")
 tenant_id = os.environ.get("TENANT_ID")
@@ -27,22 +24,28 @@ credentials = ClientSecretCredential(
     tenant_id = tenant_id
 )
 
+subscriptions = []
 subscription_client = SubscriptionClient(credentials)
-subscription_name = subscription_client.subscriptions.get(subscription_id).display_name
-print(f"Subscription ID: {subscription_id}, Subscription Name: {subscription_name}")
-
-resource_client = ResourceManagementClient(credentials, subscription_id)
-resource_list = resource_client.resources.list()
-
+subscriptions.append(subscription_client.subscriptions.list())
 file_name = f"resources.csv"
-with open(file_name, 'w', newline='') as resources_file:
-    writer = csv.writer(resources_file)
-    writer.writerow(['Subscription ID', 'Subscription Name', 'Resource Name', 'Resource Type'])
-    for resource in resource_list:
-        resource_name = resource.name
-        resource_type = resource.type
-        writer.writerow([subscription_id, subscription_name, resource_name, resource_type])
-        print(f"\tResource Name: {resource_name}, Resource Type: {resource_type}")
+
+for i in subscriptions:
+    subscriptionInfo = i.next()
+    subscription_id = subscriptionInfo.subscription_id
+    subscription_name = subscriptionInfo.display_name
+    print(f"Subscription ID: {subscription_id}, Subscription Name: {subscription_name}")
+
+    resource_client = ResourceManagementClient(credentials, subscription_id)
+    resource_list = resource_client.resources.list()
+
+    with open(file_name, 'w', newline='') as resources_file:
+        writer = csv.writer(resources_file)
+        writer.writerow(['Subscription ID', 'Subscription Name', 'Resource Name', 'Resource Type'])
+        for resource in resource_list:
+            resource_name = resource.name
+            resource_type = resource.type
+            writer.writerow([subscription_id, subscription_name, resource_name, resource_type])
+            print(f"\tResource Name: {resource_name}, Resource Type: {resource_type}")
 
 print(f"Resources written to {file_name}")
 # Upload the file to blob storage

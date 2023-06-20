@@ -4,12 +4,12 @@ import os
 from azure.identity import ClientSecretCredential
 from azure.mgmt.advisor import AdvisorManagementClient
 from azure.storage.blob import BlobServiceClient
+from azure.mgmt.subscription import SubscriptionClient
 
 storage_account_name = os.environ.get("STORAGE_ACCOUNT_NAME")
 storage_account_key = os.environ.get("STORAGE_ACCOUNT_KEY")
 container_name = os.environ.get("STORAGE_CONTAINER_NAME")
 
-subscription_id = os.environ.get("SUBSCRIPTION_ID")
 client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
 tenant_id = os.environ.get("TENANT_ID")
@@ -32,14 +32,19 @@ credentials = ClientSecretCredential(
     tenant_id = tenant_id
 )
 
-advisor_client = AdvisorManagementClient(credentials, subscription_id)
-
-recommendations = advisor_client.recommendations.list()
-
+subscriptions = []
+subscription_client = SubscriptionClient(credentials)
+subscriptions.append(subscription_client.subscriptions.list())
 recommendations_list = []
-for recommendation in recommendations:
-    recommendation_dict = recommendation.as_dict()
-    recommendations_list.append(recommendation_dict)
+
+for i in subscriptions:
+    subscriptionInfo = i.next()
+    subscription_id = subscriptionInfo.subscription_id
+    advisor_client = AdvisorManagementClient(credentials, subscription_id)
+    recommendations = advisor_client.recommendations.list()
+    for recommendation in recommendations:
+        recommendation_dict = recommendation.as_dict()
+        recommendations_list.append(recommendation_dict)
 
 output_file = "azure_recommendations.csv"
 saveDataToCsv(recommendations_list, output_file)
