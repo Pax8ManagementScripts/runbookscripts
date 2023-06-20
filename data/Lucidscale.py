@@ -36,6 +36,7 @@ from azure.mgmt.apimanagement import ApiManagementClient
 from azure.mgmt.servicebus import ServiceBusManagementClient
 from azure.mgmt.databricks import DatabricksClient
 from azure.mgmt.msi import ManagedServiceIdentityClient
+from azure.identity import ClientSecretCredential
 
 import json
 import re
@@ -48,6 +49,16 @@ from datetime import date, datetime, tzinfo, timedelta
 ERROR_COLOR = '\033[91m'
 WARNING_COLOR = '\033[93m'
 END_COLOR = '\033[0m'
+
+azure_client_id = os.environ.get("CLIENT_ID")
+azure_client_secret = os.environ.get("CLIENT_SECRET")
+tenant_id = os.environ.get("TENANT_ID")
+
+credentials = ClientSecretCredential(
+    client_id = azure_client_id,
+    client_secret = azure_client_secret,
+    tenant_id = tenant_id
+)
 
 def print_err(msg, warning=False):
     start_color = WARNING_COLOR if warning else ERROR_COLOR
@@ -70,11 +81,9 @@ class AzureImportUtil():
     def __init__(self, args):
         self.args = args
 
-        credentials = AzureCliCredential()
         self.subscription_client = SubscriptionClient(credentials)
 
     def set_clients_to_subscription(self, subscription_id=None):
-        credentials = AzureCliCredential()
 
         if (subscription_id is not None):
             self.subscription_client = SubscriptionClient(credentials, subscription_id=subscription_id)
