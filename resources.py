@@ -24,15 +24,12 @@ credentials = ClientSecretCredential(
     tenant_id = tenant_id
 )
 
-subscriptions = []
 subscription_client = SubscriptionClient(credentials)
-subscriptions.append(subscription_client.subscriptions.list())
 file_name = f"resources.csv"
 
-for i in subscriptions:
-    subscriptionInfo = i.next()
-    subscription_id = subscriptionInfo.subscription_id
-    subscription_name = subscriptionInfo.display_name
+for i in subscription_client.subscriptions.list():
+    subscription_id = i.subscription_id
+    subscription_name = i.display_name
     print(f"Subscription ID: {subscription_id}, Subscription Name: {subscription_name}")
 
     resource_client = ResourceManagementClient(credentials, subscription_id)
