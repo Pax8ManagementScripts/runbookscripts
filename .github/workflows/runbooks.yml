@@ -16,6 +16,10 @@ env:
   STORAGE_ACCOUNT_NAME: ${{ vars.STORAGE_ACCOUNT_NAME }}
   STORAGE_ACCOUNT_KEY: ${{ secrets.STORAGE_ACCOUNT_KEY }}
   STORAGE_CONTAINER_NAME: ${{ vars.STORAGE_CONTAINER_NAME }}
+  GITHUB_REPOSITORY_OWNER: ${{ secrets.GITHUB_REPOSITORY_OWNER}}
+  GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY}}
+  GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID}}
+  GITHUB_PRIVATE_KEY: ${{ secrets.GITHUB_PRIVATE_KEY}}
   
 jobs:
   build:
@@ -42,6 +46,9 @@ jobs:
 
       - name: Execute resource_tag_finding.py script
         run: python resource_tag_finding.py
+      
+      - name: Execute github_app_token.py script
+        run: python github_app_token.py
       
       - name: Execute lucidscale-across-subs.py script
         run: python lucidscale-across-subs.py
