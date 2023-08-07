@@ -45,6 +45,7 @@ jobs:
       
       - name: Execute lucidscale-across-subs.py script
         run: python lucidscale-across-subs.py
+        continue-on-error: true
         
       - name: Import AZ powershell module
         shell: pwsh
